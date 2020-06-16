@@ -10,21 +10,17 @@ etc.
 
 ### Instructions to run:
 
-cd backend 
-
-to add new data to db via json files run the command : python manage.py commands json_file_name.json
-
-set up venv
-
-run `pip install -r requirements.txt `
-
-`python manage.py runserver`
-
-cd ../frontend
-
-run: `npm i`
-
-`yarn start `
+1. `cd backend`
+2.  `pip install -r requirements.txt `
+3. `npm run populate-db`
+4. `python manage.py runserver`
+5. `cd ../frontend`
+6. `npm i`
+7. `yarn start `
+8. http://localhost:3000/
 
 
-http://localhost:3000/
+
+
+
+
