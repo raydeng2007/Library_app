@@ -42,7 +42,7 @@ export default class CreateModal extends Component {
                                 name="title"
                                 value={this.state.activeItem.title}
                                 onChange={this.handleChange}
-                                placeholder="Enter Todo Title"
+                                placeholder="Enter Book Title"
                             />
                         </FormGroup>
                         <FormGroup>
@@ -52,7 +52,7 @@ export default class CreateModal extends Component {
                                 name="author"
                                 value={this.state.activeItem.author}
                                 onChange={this.handleChange}
-                                placeholder="Enter Todo author"
+                                placeholder="Enter Book Author"
                             />
                         </FormGroup>
                         <FormGroup>
