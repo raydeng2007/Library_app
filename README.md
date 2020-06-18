@@ -4,7 +4,8 @@ Full stack Library app that allows to :
 Add books,
 Reserve books,
 Search Books,
-Pagination: (3 per page by design because of project requirement)
+Pagination: (5 per page by design per project requirement)
+Has script to add json file to database. 
 Uses sqlite as db. 
 etc. 
 
