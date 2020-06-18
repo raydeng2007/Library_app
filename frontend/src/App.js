@@ -23,6 +23,7 @@ class App extends Component {
             totalPageNum: 0,
             bookCountAvailable: 0,
             bookCountBorrowed: 0,
+            pagination:5,
             baseUrlAvailable: `http://localhost:8000/api/available/?page=`,
             baseUrlBorrowed: `http://localhost:8000/api/borrowed/?page=`,
             baseUrlBooks: `http://localhost:8000/api/books/`,
@@ -42,7 +43,7 @@ class App extends Component {
                 .get(this.state.baseUrlBorrowed + this.state.currPageNum)
                 .then((res) => {
                     this.setState({
-                        totalPageNum: Math.ceil(res.data.count / 5),
+                        totalPageNum: Math.ceil(res.data.count / this.state.pagination),
                         bookCountBorrowed: res.data.count,
                         bookList: res.data.results,
                         nextPage: res.data.next,
@@ -55,7 +56,7 @@ class App extends Component {
                 .get(this.state.baseUrlAvailable + this.state.currPageNum)
                 .then((res) => {
                     this.setState({
-                        totalPageNum: Math.ceil(res.data.count / 5),
+                        totalPageNum: Math.ceil(res.data.count / this.state.pagination),
                         bookCountAvailable: res.data.count,
                         bookList: res.data.results,
                         nextPage: res.data.next,
@@ -131,8 +132,11 @@ class App extends Component {
 
     // Handle reserving of available book.
     handleReserve = (item) => {
+
+        // Handle edge case of last book on each page, after reserving
+        // Will jump to previous page.
         if (
-            this.state.bookCountAvailable % 5 === 1 &&
+            this.state.bookCountAvailable % this.state.pagination === 1 &&
             this.state.currPageNum === this.state.totalPageNum &&
             this.state.currPageNum !== 1
         ) {
@@ -154,8 +158,11 @@ class App extends Component {
 
     // Handle releasing of reserved book.
     handleRelease = (item) => {
+
+        // Handle edge case of last book on each page, after releasing
+        // Will jump to previous page.
         if (
-            this.state.bookCountBorrowed % 5 === 1 &&
+            this.state.bookCountBorrowed % this.state.pagination === 1 &&
             this.state.currPageNum === this.state.totalPageNum &&
             this.state.currPageNum !== 1
         ) {
