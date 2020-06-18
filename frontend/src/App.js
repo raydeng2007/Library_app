@@ -217,6 +217,7 @@ class App extends Component {
         );
     };
 
+    // Search functionality
     Search = () => {
         return (
             <FormGroup className="search">
