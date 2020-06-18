@@ -21,8 +21,10 @@ class App extends Component {
             prevPage: null,
             currPageNum: 1,
             totalPageNum: 0,
-            firstPageAvailable: "http://localhost:8000/api/available/",
-            firstPageBorrowed: "http://localhost:8000/api/borrowed/",
+            bookCountAvailable:0,
+            bookCountBorrowed:0,
+            baseUrlAvailable: `http://localhost:8000/api/available/?page=`,
+            baseUrlBorrowed: `http://localhost:8000/api/borrowed/?page=`,
             bookList: [],
         };
     }
@@ -34,29 +36,34 @@ class App extends Component {
     refreshList = () => {
         if (this.state.viewBorrowed) {
             axios
-                .get(this.state.firstPageBorrowed)
-                .then((res) =>
+                .get(this.state.baseUrlBorrowed+this.state.currPageNum)
+                .then((res) =>{
+                    console.log(res.data);
+
                     this.setState({
-                        totalPageNum: Math.ceil(res.data.count / 3),
-                        currPageNum: 1,
+                        totalPageNum: Math.ceil(res.data.count / 5),
+                        bookCountBorrowed:res.data.count,
+                        // currPageNum: 1,
                         bookList: res.data.results,
                         nextPage: res.data.next,
                         prevPage: res.data.previous,
-                    })
-                )
+                    });
+                })
                 .catch((err) => console.log(err));
         } else {
             axios
-                .get(this.state.firstPageAvailable)
-                .then((res) =>
+                .get(this.state.baseUrlAvailable+this.state.currPageNum)
+                .then((res) =>{
                     this.setState({
-                        totalPageNum: Math.ceil(res.data.count / 3),
-                        currPageNum: 1,
+                        totalPageNum: Math.ceil(res.data.count / 5),
+                        bookCountAvailable:res.data.count,
+                        // currPageNum: 1,
                         bookList: res.data.results,
                         nextPage: res.data.next,
                         prevPage: res.data.previous,
                     })
-                )
+
+                })
                 .catch((err) => console.log(err));
         }
     };
@@ -101,7 +108,6 @@ class App extends Component {
 
     handleSubmit = (item) => {
         this.toggle();
-
         axios
             .post("http://localhost:8000/api/books/", {
                 title: item.title,
@@ -123,6 +129,9 @@ class App extends Component {
     };
 
     handleReserve = (item) => {
+        if(this.state.bookCountAvailable%5===1 && this.state.currPageNum===this.state.totalPageNum && this.state.currPageNum !==1){
+          this.setState((prevState) => ({ currPageNum: prevState.currPageNum - 1 }));
+        }
         axios
             .put(`http://localhost:8000/api/reserve/books/${item.book_id}/`, {
                 book_id: item.book_id,
@@ -136,6 +145,9 @@ class App extends Component {
     };
 
     handleRelease = (item) => {
+        if(this.state.bookCountBorrowed%5===1 && this.state.currPageNum===this.state.totalPageNum && this.state.currPageNum !==1 ){
+          this.setState((prevState) => ({ currPageNum: prevState.currPageNum - 1 }));
+        }
         axios
             .put(`http://localhost:8000/api/reserve/books/${item.book_id}/`, {
                 book_id: item.book_id,
@@ -162,7 +174,7 @@ class App extends Component {
             .then((res) =>
                 this.setState({
                     currPageNum: 1,
-                    totalPageNum: Math.ceil(res.data.count / 3),
+                    totalPageNum: Math.ceil(res.data.count / 5),
                     viewBorrowed: false,
                     bookList: res.data.results,
                     nextPage: res.data.next,
@@ -176,9 +188,9 @@ class App extends Component {
 
     displayBorrowed = (status) => {
         if (status) {
-            return this.setState({ viewBorrowed: true }, this.refreshList);
+            return this.setState({ viewBorrowed: true, currPageNum: 1 }, this.refreshList);
         }
-        return this.setState({ viewBorrowed: false }, this.refreshList);
+        return this.setState({ viewBorrowed: false, currPageNum: 1 }, this.refreshList);
     };
 
     Search = () => {
