@@ -11,7 +11,7 @@ etc.
 
 ### Instructions to run:
 
-1. `cd backend`
+1. `cd backend` (activate venv)
 2.  `pip install -r requirements.txt `
 3. `npm run populate-db`
 4. `python manage.py runserver`
